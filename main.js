@@ -10,7 +10,8 @@ async function setupGPIO() {
     chip = new Chip('gpiochip0');
     // GPIO 4番ラインを取得し、出力として設定
     LED = new Line(chip, 4);
-    await LED.requestOutputMode(0, 'led-blinker'); // 初期値をオフ(0)に設定
+    // 初期値をオフ(0)に設定
+    LED.requestOutputMode(0, 'led-blinker');
     console.log('GPIO setup complete.');
   } catch (error) {
     console.error('Failed to setup GPIO:', error);
@@ -22,8 +23,10 @@ async function setupGPIO() {
 async function blinkLED() {
   let value = 0;
   blinkInterval = setInterval(async () => {
-    value = value === 0 ? 1 : 0; // 0と1を切り替える
-    await LED.setValue(value);   // LEDの状態を書き込む
+    // 0と1を切り替える
+    value = value === 0 ? 1 : 0;
+    // LEDの状態を書き込む
+    await LED.setValue(value);
     console.log(`LED is ${value === 1 ? 'on' : 'off'}`);
   }, 500);
 }
@@ -37,9 +40,6 @@ process.on('SIGINT', async () => {
     // LEDをオフにする
     await LED.setValue(0);
     LED.release();
-  }
-  if (chip) {
-    chip.close();
   }
   console.log('LED blinking stopped and GPIO unexported.');
   process.exit();
