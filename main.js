@@ -1,4 +1,4 @@
-import { GpioLed } from "./gpioLed.js";
+import { DummyLed } from "./dummyLed.js";
 
 let led;
 let blinkInterval = null;
@@ -32,10 +32,17 @@ process.on("SIGINT", () => {
 
 async function main() {
 	try {
-		led = new GpioLed(4); // GPIO 4番ピンを使用
-		console.log("GPIO setup complete.");
+		if (process.env.TARGET === "raspberrypi") {
+			const { GpioLed } = await import("./gpioLed.js");
+			led = new GpioLed(4);
+			console.log("Using GpioLed for Raspberry Pi.");
+		} else {
+			led = new DummyLed(4);
+			console.log("Using DummyLed (not on Raspberry Pi).");
+		}
+		console.log("LED setup complete.");
 	} catch (error) {
-		console.error("Failed to setup GPIO:", error);
+		console.error("Failed to setup LED:", error);
 		process.exit(1);
 	}
 
