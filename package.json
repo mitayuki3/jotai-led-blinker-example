@@ -13,5 +13,8 @@
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
     "node-libgpiod": "^0.5.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
   }
 }
