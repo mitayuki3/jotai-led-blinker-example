@@ -1,19 +1,32 @@
+import { atom, createStore } from "jotai/vanilla";
+
 import { DummyLed } from "./dummyLed.js";
 
 let led;
 let blinkInterval = null;
 
-// LEDを1秒周期で点滅させる関数
+const lampAtom = atom(false);
+const toggleAtom = atom(null, (get, set) => {
+	const prev = get(lampAtom);
+	set(lampAtom, !prev);
+});
+const store = createStore();
+
+// lampAtom の値を監視して LED 出力に反映する
+store.sub(lampAtom, () => {
+	const value = store.get(lampAtom);
+	if (value) {
+		led.on();
+		console.log("LED: turn ON");
+	} else {
+		led.off();
+		console.log("LED: turn OFF");
+	}
+});
+
 async function blinkLED() {
-	let value = 0;
 	blinkInterval = setInterval(() => {
-		value = value === 0 ? 1 : 0;
-		if (value === 1) {
-			led.on();
-		} else {
-			led.off();
-		}
-		console.log(`LED is ${value === 1 ? "on" : "off"}`);
+		store.set(toggleAtom);
 	}, 500);
 }
 
