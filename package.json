@@ -12,6 +12,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
+    "jotai": "^2.12.5",
     "node-libgpiod": "^0.5.0"
   },
   "devDependencies": {
